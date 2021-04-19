@@ -1,0 +1,28 @@
+jaeger:
+  # Specifies whether Jaeger instance should be created
+  create: false
+  # namespace where Jaeger resource should be created default to .Release.Namespace
+  namespace: monitoring
+  spec: 
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+      hosts:
+        - {{ fqdn }}
+      tls:
+      - hosts:
+          - {{ fqdn }}
+        secretName: jaeger-tls
+    strategy: allInOne
+    allInOne:
+      options:
+        query:
+          base-path: /jaeger
+
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
+  pspEnabled: false
+  clusterRole: true
